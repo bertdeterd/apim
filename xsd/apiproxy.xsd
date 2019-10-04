@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:w="https://apim.com" elementFormDefault="qualified" xmlns="https://apim.com" targetNamespace="https://apim.com"  >
+    <xs:simpleType name="servicecode" final="restriction">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="REST" />
+            <xs:enumeration value="ODATA" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:attribute name="type">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="OAuthV2" />
+                <xs:enumeration value="AssignMessage" />
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+      
+    <xs:simpleType name="policyType">
+        <xs:restriction base="xs:string">
+            <xs:whiteSpace value="collapse" />
+            <xs:pattern value="[A-Za-z0-9\.\-]*"></xs:pattern>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="policyTypeWithAttribute">
+        <xs:simpleContent>
+            <xs:extension base="w:policyType">
+                <xs:attribute ref="w:type" use="required" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="policiesType">
+        <xs:sequence>
+            <xs:element type="w:policyTypeWithAttribute" name="policy" maxOccurs="unbounded" minOccurs="0"></xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="APIProxy">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:string" name="name" />
+                <xs:element type="xs:string" name="title" />
+                <xs:element type="xs:string" name="description" />
+                <xs:element type="w:servicecode" name="service_code" />
+                <xs:element name="life_cycle">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:string" name="changed_by" />
+                            <xs:element type="xs:string" name="created_by" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="proxyEndPoints">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="proxyEndPoint">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element type="xs:string" name="proxyEndPointName" />
+                                        <xs:element type="xs:string" name="apiResourceName" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="targetEndPoints">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element type="xs:string" name="targetEndPoint" maxOccurs="unbounded" minOccurs="0" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="policies" type="w:policiesType" />
+                <xs:element name="fileResources" type="xs:string"  />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
